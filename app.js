@@ -12,6 +12,11 @@ const cors = require("cors");
 const xss = require("xss-clean");
 const rateLimiter = require("express-rate-limit");
 
+// swagger
+const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./swagger.yaml");
+
 app.set("trust proxy", 1);
 app.use(
   rateLimiter({
@@ -27,9 +32,11 @@ app.use(xss());
 // extra packages
 
 // routes
+
 app.get("/", (req, res) => {
-  res.send("jobs api");
+  res.send("<h1>jobs api</h1> <a href='/api-docs'>Documents</a>");
 });
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // routes
 const authRouter = require("./routes/auth");
